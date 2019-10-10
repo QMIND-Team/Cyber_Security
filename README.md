@@ -2,4 +2,10 @@
 
 ## Team Members:
 Will Macdonald
+
 Ryan Saweczko
+
+Will Coffell
+
+Cameron Morrison
+
