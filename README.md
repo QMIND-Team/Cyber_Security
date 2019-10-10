@@ -6,6 +6,6 @@ Will Macdonald
 Ryan Saweczko
 
 Will Coffell
-
+Connor Chappell
 Cameron Morrison
 
