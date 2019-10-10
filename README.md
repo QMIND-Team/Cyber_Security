@@ -2,11 +2,3 @@
 
 ## Team Members:
 Will Macdonald
-
-Cameron Morrison
-
-Connor Chappell
-
-Ryan Saweczko
-
-Will Coffell
