@@ -5,6 +5,7 @@ from Detector import init_detector
 from LoadData import load_dataset
 
 
+# compile the functionality of GAN
 def GAN():
     pass
 
