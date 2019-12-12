@@ -99,4 +99,4 @@ if __name__ == '__main__':
     metadata = read_metadata(dataset)
     print("Metadata Dataframe: \n{}\n".format(metadata))
     visualize_metadata(metadata)
-    visualize_vectorized_features(X_train, y_train)
+    train_df = visualize_vectorized_features(X_train, y_train)
