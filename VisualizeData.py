@@ -81,7 +81,6 @@ def visualize_vectorized_features(X_data, y_data):
 
 
 if __name__ == '__main__':
-    #test
     # todo change this file path for where you have ember dataset stored
     dataset = "C:/Users/4ccha/Documents/Y3/QMIND/Ember DataSet/ember"
     test_train_files = 'X_train.dat' and 'y_train.dat' and 'X_test.dat' and 'y_test.dat'
