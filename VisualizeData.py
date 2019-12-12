@@ -4,10 +4,10 @@ if __name__ == '__main__':
     import lightgbm as lgb
 
     # todo: adjust this path to where you have the dataset located
-    dataset_dir = "D:/QMIND/DataSet/ember"
+    dataset_dir = "C:\Programming\Github_projects\Ember\dataset2017"
 
-    ember.create_vectorized_features(dataset_dir, 1)
-    ember.create_metadata(dataset_dir)
+    #ember.create_vectorized_features(dataset_dir, 1)
+    #ember.create_metadata(dataset_dir)
 
     X_train, y_train, X_test, y_test = ember.read_vectorized_features(dataset_dir)
     metadata_dataframe = ember.read_metadata(dataset_dir)
