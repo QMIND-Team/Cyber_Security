@@ -77,6 +77,8 @@ def visualize_vectorized_features(X_data, y_data):
     feat_df.hist(figsize=(50, 50), xlabelsize=80, ylabelsize=80)
     plt.show()
 
+    return feat_df
+
 
 if __name__ == '__main__':
     # todo change this file path for where you have ember dataset stored
