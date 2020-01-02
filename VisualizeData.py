@@ -1,9 +1,12 @@
+import os
 import ember
 import matplotlib.pyplot as plt
 import pandas as pd
 
 import warnings
+
 warnings.simplefilter('ignore')
+pd.set_option('display.max_colwidth', -1)
 plt.rcParams.update(plt.rcParamsDefault)
 
 
@@ -90,6 +93,7 @@ if __name__ == '__main__':
         init_vectorized_features(dataset)
     if metadata_file not in dataset_dir_files:
         init_metadata(dataset)
+
     X_train, y_train, X_test, y_test = read_test_train(dataset)
     print("X_train data: \n{}\n".format(X_train))
     print("Shape of X_train data: {}\n".format(X_train.shape))
@@ -97,8 +101,10 @@ if __name__ == '__main__':
     print("X_test data: \n{}\n".format(X_test))
     print("Shape of X_test data: {}\n".format(X_test.shape))
     print("y_test data: \n{}\n".format(y_test))
+
     metadata = read_metadata(dataset)
     print("Metadata Dataframe: \n{}\n".format(metadata))
+
     visualize_metadata(metadata)
     train_df = visualize_vectorized_features(X_train, y_train)
 """
