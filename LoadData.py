@@ -11,56 +11,65 @@ pd.set_option('display.max_columns', None)
 
 
 # Load the data from the data set and create x, y variables for both malicious an benign examples
-def load_dataset(dataset_dir):
+def load_dataset(dataset_dir, sample_size=100000):
     test_train_files = 'X_train.dat' and 'y_train.dat' and 'X_test.dat' and 'y_test.dat'
     dataset_dir_files = os.listdir(dataset_dir)
     if test_train_files not in dataset_dir_files:
         init_vectorized_features(dataset_dir_files)
     X_train, y_train, X_test, y_test = read_test_train(dataset_dir)
-
-    print("Converting X_train from np.memmap to tf.tensor")
-    X_train = tf.convert_to_tensor(X_train)
-    print("Shape of X_train tensor is {}".format(X_train.shape))
-    print("X_train conversion complete")
-    print("Converting X_test from np.memmap to tf.tensor")
-    X_test = tf.convert_to_tensor(X_test)
-    print("Shape of X_test tensor is {}".format(X_test.shape))
-    print("X_test conversion complete")
+    if sample_size > 300000:
+        print("[Invalid Sample Size] Sample size must be less than 300,000")
+        sample_size = 300000
+    elif sample_size <= 0:
+        print("[Invalid Sample Size] Sample size must be greater than 0")
+        sample_size = 100000
+    test_sample_size = int((1/3) * sample_size)
 
     X_mal_train = []
     y_mal_train = []
     X_mal_test = []
     y_mal_test = []
-
     X_ben_train = []
     y_ben_train = []
     X_ben_test = []
     y_ben_test = []
 
-    for tensor in range(len(X_train)):
+    print("Dividing dataset into malicious and benign labeled examples")
+    tensor = 0
+    while len(X_mal_train) < sample_size:
         if y_train[tensor] == 1:
             X_mal_train.append(X_train[tensor])
             y_mal_train.append(y_train[tensor])
-        elif y_train[tensor] == 0:
+        tensor += 1
+    tensor = 0
+    while len(X_ben_train) < sample_size:
+        if y_train[tensor] == 0:
             X_ben_train.append(X_train[tensor])
             y_ben_train.append(y_train[tensor])
-    for tensor in range(len(X_test)):
+        tensor += 1
+    tensor = 0
+    while len(X_mal_test) < test_sample_size:
         if y_test[tensor] == 1:
             X_mal_test.append(X_test[tensor])
             y_mal_test.append(y_test[tensor])
-        elif y_test[tensor] == 0:
+        tensor += 1
+    tensor = 0
+    while len(X_ben_test) < test_sample_size:
+        if y_test[tensor] == 0:
             X_ben_test.append(X_test[tensor])
             y_ben_test.append(y_test[tensor])
+        tensor += 1
 
+    print("Converting data from np.memmap to tf.tensor")
     X_mal_train = tf.convert_to_tensor(X_mal_train)
     y_mal_train = tf.convert_to_tensor(y_mal_train)
     X_mal_test = tf.convert_to_tensor(X_mal_test)
     y_mal_test = tf.convert_to_tensor(y_mal_test)
-
     X_ben_train = tf.convert_to_tensor(X_ben_train)
     y_ben_train = tf.convert_to_tensor(y_ben_train)
     X_ben_test = tf.convert_to_tensor(X_ben_test)
     y_ben_test = tf.convert_to_tensor(y_ben_test)
+
     return X_mal_train, y_mal_train, X_mal_test, y_mal_test, X_ben_train, y_ben_train, X_ben_test, y_ben_test
 
 
@@ -123,13 +132,13 @@ if __name__ == '__main__':
     print("Benign Type: {}".format(type(benign)))
 
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "D:/QMIND/DataSet/ember")
+        "E:/QMIND/DataSet/ember", 50000)
     print("xtrain_mal values: {}".format(xtrain_mal))
     print("xtrain_mal type: {}".format(type(xtrain_mal)))
     print("xtrain_mal shape: {}\n".format(xtrain_mal.shape))
     print("xtest_mal values: {}".format(xtest_mal))
     print("xtest_mal type: {}".format(type(xtest_mal)))
     print("xtest_mal shape: {}\n".format(xtest_mal.shape))
+    print("Done")
 """
-
 
