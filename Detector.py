@@ -17,4 +17,3 @@ def init_detector():
                     loss=logmse,
                     metrics=['accuracy'])
 
-    pass

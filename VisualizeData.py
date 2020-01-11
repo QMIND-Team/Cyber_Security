@@ -8,7 +8,7 @@ import warnings
 warnings.simplefilter('ignore')
 pd.set_option('display.max_colwidth', -1)
 plt.rcParams.update(plt.rcParamsDefault)
-#hi
+
 
 def init_vectorized_features(dataset_dir):
     ember.create_vectorized_features(dataset_dir, 1)
