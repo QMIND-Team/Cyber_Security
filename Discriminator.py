@@ -9,3 +9,8 @@ def init_discriminator():
 
     #
     pass
+
+
+def discriminate_examples(example, discriminator):
+    disc_label = discriminator.predict_on_batch([example])
+    return disc_label
