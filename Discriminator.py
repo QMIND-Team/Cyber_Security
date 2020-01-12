@@ -20,6 +20,7 @@ def init_discriminator():
     return model
 
 
+# passing an adversarial example into the discriminator and outputting a prediction of the type of file
 def discriminate_examples(example, discriminator):
     disc_label = discriminator.predict_on_batch([example])
     return disc_label
