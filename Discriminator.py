@@ -7,3 +7,8 @@ def init_discriminator():
     # discriminator uses different forms of classification to predict which type of example this is
     # examples are passed from the discriminator to the detector to determine whether or not the executable is malicious
     pass
+
+
+def discriminate_examples(example, discriminator):
+    disc_label = discriminator.predict_on_batch([example])
+    return disc_label
