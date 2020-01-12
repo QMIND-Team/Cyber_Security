@@ -6,14 +6,11 @@ import os
 
 from Generator import init_generator, generate_example
 from Discriminator import init_discriminator, discriminate_examples
-from Detector import generator_loss, discriminator_loss, save_checkpoint
+from Detector import init_detector
 from LoadData import load_dataset, malicious_examples, single_malicious_example, benign_examples, single_benign_example
 from keras.optimizers import Adam
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
-generator_optimizer = Adam(1e-4)
-discriminator_optimizer = Adam(1e-4)
 
 
 def train_step(malicious_examples, benign_examples, generator, discriminator):
@@ -64,3 +61,5 @@ def train(epochs, batch_size):
             print("Should save here")
             # checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
+
+
