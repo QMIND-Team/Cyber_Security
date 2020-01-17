@@ -39,6 +39,7 @@ def init_generator():
     return model
 
 
+# pass two tensors into the generator and output an adversarial example
 def generate_example(example, noise, generator):
     gen_example = generator.predict_on_batch([example, noise])
     generated_example = tf.convert_to_tensor(gen_example)

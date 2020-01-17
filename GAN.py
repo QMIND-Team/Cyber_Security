@@ -13,8 +13,8 @@ from TrainGAN import train
 # compile the functionality of GAN
 def GAN():
     # TODO: Change this path to where Ember dataset is saved on respective computer
-    # dataset = "D:/QMIND/DataSet/ember"
-    # df = load_to_dataframe(dataset)
+    # dataset = "E:/QMIND/DataSet/ember"
+    # df = load_dataset(dataset)
 
     noise = tf.random.uniform([1, 2381])
     print("Noise Type: {}".format(type(noise)))
