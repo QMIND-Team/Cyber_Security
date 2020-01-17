@@ -4,14 +4,18 @@ import tensorflow as tf
 # import functions from supporting files
 from Generator import init_generator, generate_example
 from Discriminator import init_discriminator, discriminate_examples
-from Detector import init_detector
+from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
 from LoadData import load_dataset, load_to_dataframe, malicious_examples, single_malicious_example, benign_examples,\
     single_benign_example
 from TrainGAN import train
 
+EPOCHS = 2
+BATCH_SIZE = 1000
+
 
 # compile the functionality of GAN
 def GAN():
+    """
     # TODO: Change this path to where Ember dataset is saved on respective computer
     # dataset = "E:/QMIND/DataSet/ember"
     # df = load_dataset(dataset)
@@ -45,6 +49,8 @@ def GAN():
     discriminator = init_discriminator()
     predicted_label = discriminate_examples(adversarial_example, discriminator)
     print(predicted_label)
+    """
+    train(EPOCHS, BATCH_SIZE)
 
 
 if __name__ == '__main__':

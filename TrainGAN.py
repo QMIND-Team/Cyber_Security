@@ -6,21 +6,24 @@ import os
 
 from Generator import init_generator, generate_example
 from Discriminator import init_discriminator, discriminate_examples
-from Detector import init_detector
+from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
 from LoadData import load_dataset, malicious_examples, single_malicious_example, benign_examples, single_benign_example
-from keras.optimizers import Adam
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
+@tf.function
 def train_step(malicious_examples, benign_examples, generator, discriminator):
     noise = tf.random.uniform([1, 2381])
 
-    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-        adversarial_example = generator.predict([malicious_examples, noise], steps=5)
+    print("Malicious batch type: {}".format(type(malicious_examples)))
+    print("Benign batch type: {}".format(type(benign_examples)))
 
-        real_label = discriminator.predict([benign_examples], steps=5)
-        generated_label = discriminator.predict([adversarial_example], steps=5)
+    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+        adversarial_example = generator([malicious_examples, noise], training=True)
+
+        real_label = discriminator([benign_examples], training=True)
+        generated_label = discriminator([adversarial_example], training=True)
 
         gen_loss = generator_loss(generated_label)
         disc_loss = discriminator_loss(real_label, generated_label)
@@ -38,7 +41,9 @@ def train(epochs, batch_size):
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
         "E:/QMIND/DataSet/ember")
     generator = init_generator()
+    print(type(generator))
     discriminator = init_discriminator()
+    print(type(discriminator))
     # checkpoint_prefix, checkpoint = save_checkpoint(generator, generator_optimizer, discriminator,
     #                                                 discriminator_optimizer)
     epoch_count = 1

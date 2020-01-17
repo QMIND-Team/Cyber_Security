@@ -1,5 +1,6 @@
 # import required packages
 import tensorflow as tf
+import keras
 
 
 # initialize the generator segment of the GAN
@@ -8,7 +9,34 @@ def init_generator():
     # concatenate the two layers together
     # create a fully connected neural network with concatenated layer as the input
     # return the model
-    pass
+    malware = keras.Input(shape=(2381,))
+    # x1 = keras.layers.Dense(2381, activation='relu')(input1)
+
+    noise = keras.Input(shape=(2381,))
+    # x2 = keras.layers.Dense(2381, activation='relu')(input2)
+
+    model = keras.Sequential()
+
+    # Apply noise to input of size 2381
+    model.add(keras.layers.Concatenate([malware, noise]))
+
+    # assert model.output_shape == (None, 2381)
+
+    # Hidden layer of size 3952
+    model.add(keras.layers.Dense(3952, use_bias=False))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.LeakyReLU())
+
+    # assert model.output_shape == (None, 3952)  # Note: None is the batch size
+
+    # Output layer of size 2381
+    model.add(keras.layers.Dense(2381, use_bias=False))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.LeakyReLU())
+
+    # assert model.output_shape == (None, 2381)
+
+    return model
 
 
 # pass two tensors into the generator and output an adversarial example
