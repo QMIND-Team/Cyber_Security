@@ -4,10 +4,10 @@ import numpy as np
 import time
 import os
 
-from Generator import init_generator, generate_example
-from Discriminator import init_discriminator, discriminate_examples
+from Generator import init_generator
+from Discriminator import init_discriminator
 from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
-from LoadData import load_dataset, malicious_examples, single_malicious_example, benign_examples, single_benign_example
+from LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -19,8 +19,8 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
         adversarial_example = generator([malicious_examples, noise])
 
-        real_label = discriminator([benign_examples], training=True)
-        generated_label = discriminator([adversarial_example], training=True)
+        real_label = discriminator([benign_examples])
+        generated_label = discriminator([adversarial_example])
 
         gen_loss = generator_loss(generated_label)
         disc_loss = discriminator_loss(real_label, generated_label)
@@ -60,9 +60,10 @@ def train(epochs, batch_size):
             benign_batch = tf.expand_dims(ben_batch, 0)
 
             train_step(malicious_batch, benign_batch, generator, discriminator)
+            train_step_count += 1
         if (epoch + 1) % 15 == 0:
             print("Should save here")
             # checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
-
+        epoch_count += 1
 

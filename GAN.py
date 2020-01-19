@@ -7,8 +7,8 @@ from LoadData import load_dataset, load_to_dataframe, malicious_examples, single
     single_benign_example
 from TrainGAN import train
 
-EPOCHS = 2
-BATCH_SIZE = 1000
+EPOCHS = 10
+BATCH_SIZE = 100
 
 
 # compile the functionality of GAN

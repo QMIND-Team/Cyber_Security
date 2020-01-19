@@ -1,4 +1,3 @@
-import tensorflow as tf
 from keras import Sequential
 from keras.layers import InputLayer, Dense, Activation
 
