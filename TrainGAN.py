@@ -4,23 +4,23 @@ import numpy as np
 import time
 import os
 
-from Generator import init_generator, generate_example
-from Discriminator import init_discriminator, discriminate_examples
-from Detector import init_detector
-from LoadData import load_dataset, malicious_examples, single_malicious_example, benign_examples, single_benign_example
-from keras.optimizers import Adam
+from Generator import init_generator
+from Discriminator import init_discriminator
+from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
+from LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
+@tf.function
 def train_step(malicious_examples, benign_examples, generator, discriminator):
     noise = tf.random.uniform([1, 2381])
 
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-        adversarial_example = generator.predict([malicious_examples, noise], steps=5)
+        adversarial_example = generator([malicious_examples, noise])
 
-        real_label = discriminator.predict([benign_examples], steps=5)
-        generated_label = discriminator.predict([adversarial_example], steps=5)
+        real_label = discriminator([benign_examples])
+        generated_label = discriminator([adversarial_example])
 
         gen_loss = generator_loss(generated_label)
         disc_loss = discriminator_loss(real_label, generated_label)
@@ -36,9 +36,12 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
 def train(epochs, batch_size):
     # TODO: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember")
+        "E:/QMIND/DataSet/ember", 5000)
     generator = init_generator()
+    generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     discriminator = init_discriminator()
+    discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+
     # checkpoint_prefix, checkpoint = save_checkpoint(generator, generator_optimizer, discriminator,
     #                                                 discriminator_optimizer)
     epoch_count = 1
@@ -57,9 +60,10 @@ def train(epochs, batch_size):
             benign_batch = tf.expand_dims(ben_batch, 0)
 
             train_step(malicious_batch, benign_batch, generator, discriminator)
+            train_step_count += 1
         if (epoch + 1) % 15 == 0:
             print("Should save here")
             # checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
-
+        epoch_count += 1
 

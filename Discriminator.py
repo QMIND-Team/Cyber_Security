@@ -1,22 +1,22 @@
-import tensorflow as tf
-
-from keras import models
-from keras import layers
+from keras import Sequential
+from keras.layers import InputLayer, Dense, Activation
 
 
 # initialize the discriminator of the GAN
 def init_discriminator():
-    # takes in inputs of either benign/malicious examples from ember dataset, or malicious examples passed on from the generator
-    # discriminator uses different forms of classification to predict which type of example this is
-    # examples are passed from the discriminator to the detector to determine whether or not the executable is malicious
+    model = Sequential()
+    # Input layer to model accepting Input(batch_size, input_size) for the size of
+    model.add(InputLayer(input_shape=(2381,)))
 
-    model = models.Sequential()     # dense layer input(batch_size, input_size)
-    model.add(layers.Dense(3952, input_shape=(2381,)))  # initial growth with base size of 2381, and secondary layer size as calculated for generator
-    model.add(layers.Dense(3952))
-    model.add(layers.Dense(1, activation='sigmoid'))  # final output, size of one
+    # Initial growth with base size of 2381, and secondary layer size as calculated for generator
+    model.add(Dense(3952, activation='relu'))
+    model.add(Dense(3952, activation='relu'))
 
-    model.summary()
+    # Final output, size of one as we want a single output predicting malicious or benign
+    model.add(Dense(1))
 
+    # Define an activation function layer as 'sigmoid' outputting prediction ranging from 0 to 1
+    model.add(Activation('sigmoid'))
     return model
 
 
