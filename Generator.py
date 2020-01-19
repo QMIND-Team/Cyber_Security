@@ -29,6 +29,7 @@ def init_generator():
     return gen
 
 
+
 # pass two tensors into the generator and output an adversarial example
 def generate_example(example, noise, generator):
     gen_example = generator([example, noise])
