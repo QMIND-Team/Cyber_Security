@@ -10,8 +10,10 @@ import sys,os,shutil
 from os import path
 
 def Isolate_PE_From_Files(folder):
-    os.mkdir(folder+"\\badFiles")
+    #os.mkdir(folder+"\\badFiles")
     for f in os.listdir(folder):
+        if f == "badFiles":#skip the directory where the bad/corrupt files go
+            continue
         """
         Try and except around this entire block are for abnormal cases
         where there is something wrong with the file reading that happen too rarely
@@ -41,7 +43,7 @@ def Isolate_PE_From_Files(folder):
                 os.remove(folder+"\\"+f)
                 
         except Exception as e:
-            shutil.move(folder+"\\"+f,folder+"\\badFiles\\"+f)
+            #shutil.move(folder+"\\"+f,folder+"\\badFiles\\"+f)
             print(e)
 
 def fileSizeCheck(folder,minSize,maxSize):
