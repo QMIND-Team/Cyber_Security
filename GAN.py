@@ -8,7 +8,7 @@ from LoadData import load_dataset, load_to_dataframe, malicious_examples, single
 from TrainGAN import train
 
 EPOCHS = 10
-BATCH_SIZE = 100
+BATCH_SIZE_FLOOR = 100
 
 
 # compile the functionality of GAN
@@ -48,7 +48,7 @@ def GAN():
     predicted_label = discriminate_examples(adversarial_example, discriminator)
     print(predicted_label)
     """
-    train(EPOCHS, BATCH_SIZE)
+    train(EPOCHS, BATCH_SIZE_FLOOR)
 
 
 if __name__ == '__main__':
