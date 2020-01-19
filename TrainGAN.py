@@ -16,11 +16,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 def train_step(malicious_examples, benign_examples, generator, discriminator):
     noise = tf.random.uniform([1, 2381])
 
-    print("Malicious batch type: {}".format(type(malicious_examples)))
-    print("Benign batch type: {}".format(type(benign_examples)))
-
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-        adversarial_example = generator([malicious_examples, noise], training=True)
+        adversarial_example = generator([malicious_examples, noise])
 
         real_label = discriminator([benign_examples], training=True)
         generated_label = discriminator([adversarial_example], training=True)
@@ -39,11 +36,12 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
 def train(epochs, batch_size):
     # TODO: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember")
+        "E:/QMIND/DataSet/ember", 5000)
     generator = init_generator()
-    print(type(generator))
+    generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     discriminator = init_discriminator()
-    print(type(discriminator))
+    discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+
     # checkpoint_prefix, checkpoint = save_checkpoint(generator, generator_optimizer, discriminator,
     #                                                 discriminator_optimizer)
     epoch_count = 1

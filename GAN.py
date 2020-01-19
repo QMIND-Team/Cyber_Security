@@ -1,7 +1,5 @@
-# import necessary files
 import tensorflow as tf
 
-# import functions from supporting files
 from Generator import init_generator, generate_example
 from Discriminator import init_discriminator, discriminate_examples
 from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
