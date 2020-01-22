@@ -1,47 +1,37 @@
-# import required packages
 import tensorflow as tf
-import keras
+from keras.models import Model
+from keras.layers import Input, Dense, Concatenate, BatchNormalization, LeakyReLU
 
 
 # initialize the generator segment of the GAN
 def init_generator():
-    # take in malware example and noise as input layers
-    # concatenate the two layers together
-    # create a fully connected neural network with concatenated layer as the input
-    # return the model
-    malware = tf.keras.Input(shape=(2381,))
-    # x1 = keras.layers.Dense(2381, activation='relu')(input1)
+    # Define a model for malicious examples that is made up of an input layer accepting a tensor of shape (None, 2381)
+    malware = Input((2381,))
 
-    noise = tf.keras.Input(shape=(2381,))
-    # x2 = keras.layers.Dense(2381, activation='relu')(input2)
-
-    model = tf.keras.Sequential()
+    # Define a model for noise that is made up of an input layer accepting a tensor of shape (None, 2381)
+    noise = Input((2381,))
 
     # Apply noise to input of size 2381
-    model.add(keras.layers.Concatenate()([malware, noise]))
-
-    assert model.output_shape == (None, 2381)
+    concat_layer = Concatenate()([malware, noise])
+    # assert concat_layer.output_shape(None, 2381)
 
     # Hidden layer of size 3952
-    model.add(keras.layers.Dense(3952, use_bias=False))
-    model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.LeakyReLU())
-
-    assert model.output_shape == (None, 3952)  # Note: None is the batch size
+    dense_layer1 = Dense(3952)(concat_layer)
+    batch_norm1 = BatchNormalization()(dense_layer1)
+    leaky1 = LeakyReLU()(batch_norm1)
 
     # Output layer of size 2381
-    model.add(keras.layers.Dense(2381, use_bias=False))
-    model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.LeakyReLU())
+    dense_layer2 = Dense(2381)(leaky1)
+    batch_norm2 = BatchNormalization()(dense_layer2)
+    output = LeakyReLU()(batch_norm2)
 
-    assert model.output_shape == (None, 2381)
-
-    return model
+    gen = Model(inputs=[malware, noise], outputs=output)
+    return gen
 
 
 # pass two tensors into the generator and output an adversarial example
 def generate_example(example, noise, generator):
-    gen_example = generator.predict_on_batch([example, noise])
+    gen_example = generator([example, noise])
     generated_example = tf.convert_to_tensor(gen_example)
     return generated_example
 
