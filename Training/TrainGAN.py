@@ -3,10 +3,10 @@ import numpy as np
 import time
 import os
 
-from Generator import init_generator
-from Discriminator import init_discriminator
-from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
-from LoadData import load_dataset
+from Models.Generator import init_generator
+from Models.Discriminator import init_discriminator
+from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
+from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 

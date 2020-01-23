@@ -4,7 +4,7 @@ import tensorflow as tf
 from random import seed, randint
 import warnings
 
-from VisualizeData import init_vectorized_features, read_test_train
+from LoadingData.VisualizeData import init_vectorized_features, read_test_train
 
 warnings.simplefilter('ignore')
 pd.set_option('display.max_columns', None)

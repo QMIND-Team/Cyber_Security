@@ -1,11 +1,4 @@
-import tensorflow as tf
-
-from Generator import init_generator, generate_example
-from Discriminator import init_discriminator, discriminate_examples
-from Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
-from LoadData import load_dataset, load_to_dataframe, malicious_examples, single_malicious_example, benign_examples,\
-    single_benign_example
-from TrainGAN import train
+from Training.TrainGAN import train
 
 EPOCHS = 10
 BATCH_SIZE_FLOOR = 100
