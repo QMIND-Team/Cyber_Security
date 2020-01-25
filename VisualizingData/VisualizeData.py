@@ -4,29 +4,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import warnings
 
+from LoadingData.LoadData import init_vectorized_features, read_test_train
+
 warnings.simplefilter('ignore')
 plt.rcParams.update(plt.rcParamsDefault)
-
-
-# Create .dat files containing the data from Ember
-def init_vectorized_features(dataset_dir):
-    ember.create_vectorized_features(dataset_dir, 1)
 
 
 # Create a .csv file containing the metadata from Ember
 def init_metadata(dataset_dir):
     ember.create_metadata(dataset_dir)
-
-
-# Reading from the .dat files based on their respective train or test subset
-def read_test_train(dataset_dir):
-    # Create X and y variables for the training subset
-    X_train, y_train = ember.read_vectorized_features(dataset_dir, subset="train")
-    print("Vectorized training features have been read")
-    # Create X and y varaibles for the testing subset
-    X_test, y_test = ember.read_vectorized_features(dataset_dir, subset="test")
-    print("Vectorized test features has been read")
-    return X_train, y_train, X_test, y_test
 
 
 # Read from the .csv file and load the data into a pd.DataFrame
@@ -57,12 +43,18 @@ def visualize_metadata(metadata_df):
     print("Benign File Ratio: {}".format(ben_split))
     print("Unlabeled File Ratio: {}\n".format(unlab_split))
 
+    # Get number of files per sub-category
+    mal_len = len(malicious)
+    ben_len = len(benign)
+    unlab_len = len(unlabeled)
+
     # display through a histogram
-    meta_df.hist(figsize=(50, 50), xlabelsize=80, ylabelsize=80)
+    plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len, ben_len, unlab_len])
+    plt.ylabel("Numbers of Files per Subset")
     plt.show()
 
 
-# Given X and y data append all the vecotrized features to a pd.DataFrame and depict the file type breakdown
+# Given X and y data append all the vectorized features to a pd.DataFrame and depict the file type breakdown
 def visualize_vectorized_features(X_data, y_data):
     print("Vectorized Features")
     # append all vectorized features of the input X and y data to a pd.DataFrame
@@ -92,14 +84,13 @@ def visualize_vectorized_features(X_data, y_data):
     # display a histogram
     feat_df.hist(figsize=(50, 50), xlabelsize=80, ylabelsize=80)
     plt.show()
-
     return feat_df
 
 
 """
 if __name__ == '__main__':
     # todo change this file path for where you have ember dataset stored
-    dataset = "C:/Users/4ccha/Documents/Y3/QMIND/Ember DataSet/ember"
+    dataset = "E:/QMIND/DataSet/ember"
     test_train_files = 'X_train.dat' and 'y_train.dat' and 'X_test.dat' and 'y_test.dat'
     metadata_file = 'metadata.csv'
 
@@ -109,17 +100,17 @@ if __name__ == '__main__':
     if metadata_file not in dataset_dir_files:
         init_metadata(dataset)
 
-    X_train, y_train, X_test, y_test = read_test_train(dataset)
-    print("X_train data: \n{}\n".format(X_train))
-    print("Shape of X_train data: {}\n".format(X_train.shape))
-    print("y_train data: \n{}\n".format(y_train))
-    print("X_test data: \n{}\n".format(X_test))
-    print("Shape of X_test data: {}\n".format(X_test.shape))
-    print("y_test data: \n{}\n".format(y_test))
+    # X_train, y_train, X_test, y_test = read_test_train(dataset)
+    # print("X_train data: \n{}\n".format(X_train))
+    # print("Shape of X_train data: {}\n".format(X_train.shape))
+    # print("y_train data: \n{}\n".format(y_train))
+    # print("X_test data: \n{}\n".format(X_test))
+    # print("Shape of X_test data: {}\n".format(X_test.shape))
+    # print("y_test data: \n{}\n".format(y_test))
 
     metadata = read_metadata(dataset)
     print("Metadata Dataframe: \n{}\n".format(metadata))
 
     visualize_metadata(metadata)
-    train_df = visualize_vectorized_features(X_train, y_train)
+    # train_df = visualize_vectorized_features(X_train, y_train)
 """

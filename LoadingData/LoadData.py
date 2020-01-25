@@ -1,12 +1,27 @@
 import os
+import ember
 import pandas as pd
 import tensorflow as tf
 from random import seed, randint
 import warnings
 
-from VisualizingData.VisualizeData import init_vectorized_features, read_test_train
-
 warnings.simplefilter('ignore')
+
+
+# Create .dat files containing the data from Ember
+def init_vectorized_features(dataset_dir):
+    ember.create_vectorized_features(dataset_dir, 1)
+
+
+# Reading from the .dat files based on their respective train or test subset
+def read_test_train(dataset_dir):
+    # Create X and y variables for the training subset
+    X_train, y_train = ember.read_vectorized_features(dataset_dir, subset="train")
+    print("Vectorized training features have been read")
+    # Create X and y varaibles for the testing subset
+    X_test, y_test = ember.read_vectorized_features(dataset_dir, subset="test")
+    print("Vectorized test features has been read")
+    return X_train, y_train, X_test, y_test
 
 
 # Load the data from the data set and create x, y variables for both malicious an benign examples
