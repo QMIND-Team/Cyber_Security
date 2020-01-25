@@ -16,12 +16,12 @@ def init_generator():
     # assert concat_layer.output_shape(None, 2381)
 
     # Hidden layer of size 3952
-    dense_layer1 = Dense(3952)(concat_layer)
+    dense_layer1 = Dense(3952, activation='relu')(concat_layer)
     batch_norm1 = BatchNormalization()(dense_layer1)
     leaky1 = LeakyReLU()(batch_norm1)
 
     # Output layer of size 2381
-    dense_layer2 = Dense(2381)(leaky1)
+    dense_layer2 = Dense(2381, activation="sigmoid")(leaky1)
     batch_norm2 = BatchNormalization()(dense_layer2)
     output = LeakyReLU()(batch_norm2)
 

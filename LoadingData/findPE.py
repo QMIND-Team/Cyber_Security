@@ -6,8 +6,9 @@ Make sure the file for the path you are moving to already exists
 before running program.
 """
 import lief
-import sys,os,shutil
+import sys, os, shutil
 from os import path
+
 
 def Isolate_PE_From_Files(folder):
     for f in os.listdir(folder):
@@ -20,21 +21,21 @@ def Isolate_PE_From_Files(folder):
         """
         try:
             binary = lief.parse(folder+"\\"+f)
-            #none if the file isn't a PE file, or a file format that can be read
+            # none if the file isn't a PE file, or a file format that can be read
             if type(binary) == type(None):
                 os.remove(folder+"\\"+f)
                 continue
             
-            header = binary.header#if it can be read, guarnteed to have a header
+            header = binary.header  # if it can be read, guarnteed to have a header
             try:
                 signature = header.signature
             except AttributeError:
-                #this error means the file does not have a signature, and PE files MUST have one
+                # this error means the file does not have a signature, and PE files MUST have one
                 os.remove(folder+"\\"+f)
                 continue
             
-            #checking if the file signature is ascii for PE, which it will be in a proper PE file
-            if signature[0:2] == [0x50,0x45]:
+            # checking if the file signature is ascii for PE, which it will be in a proper PE file
+            if signature[0:2] == [0x50, 0x45]:
                 pass
             else:
                 os.remove(folder+"\\"+f)
@@ -42,11 +43,13 @@ def Isolate_PE_From_Files(folder):
         except Exception as e:
             os.remove(folder+"\\"+f)
 
-def fileSizeCheck(folder,minSize,maxSize):
+
+def fileSizeCheck(folder, minSize, maxSize):
     for f in os.listdir(folder):
         size = os.path.getsize(folder+"\\"+f)
         if size > maxSize or size < minSize:
             os.remove(folder+"\\"+f)
+
 
 def help():
     print("FILE MUST BE RUN USING PYTHON 3.6 WITH LIEF INSTALLED. (python 3.7 may work if lief is updated for it.")
@@ -58,8 +61,9 @@ def help():
     print("findPE.py findPE [file folder]")
     print("If you wish to ensure all files within are in a PE format.")
 
+
 if __name__ == "__main__":
-    #get arguments from command line
+    # get arguments from command line
     arguments = sys.argv
 
     if len(arguments) < 3:
@@ -74,11 +78,11 @@ if __name__ == "__main__":
             print("\nInvalid Path to folder\n\n")
             exit()
             
-        fileSizeCheck(arguments[4],int(arguments[2]),int(arguments[3]))
+        fileSizeCheck(arguments[4], int(arguments[2]), int(arguments[3]))
     
     elif arguments[1] == 'findPE': 
         folder = arguments[2]
-        #check to make sure starting path works
+        # check to make sure starting path works
         if not path.isdir(folder):
             print("\nInvalid Path to folder\n\n")
             exit()

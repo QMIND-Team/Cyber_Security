@@ -1,10 +1,10 @@
 from Training.TrainGAN import train
 
-EPOCHS = 10
-BATCH_SIZE_FLOOR = 100
+EPOCHS = 50
+BATCH_SIZE_FLOOR = 391
 
 
-# compile the functionality of GAN
+# compile all the functionality of the GAN
 def GAN():
     """
     # TODO: Change this path to where Ember dataset is saved on respective computer

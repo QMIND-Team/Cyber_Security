@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 import time
 import os
 
@@ -37,14 +38,17 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
     # apply the gradients created above to the respective optimizer
     generator_optimizer.apply_gradients(zip(generator_gradient, generator.trainable_weights))
     discriminator_optimizer.apply_gradients(zip(discriminator_gradient, discriminator.trainable_weights))
+    return adversarial_example, generated_label, real_label
 
 
 # train the GAN
 def train(epochs, batch_size_floor):
+    # declaring a list which will later be used to create a dataframe to depict the results of training
+    mal_list = list()
     # load data from where ember is stored on the users computer
-    # TODO: Change this path to where Ember dataset is saved on respective computer
+    # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", 5000)
+        "E:/QMIND/DataSet/ember", 100000)
     # initialize the generator model and compile it with the generator_optimizer
     generator = init_generator()
     generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
@@ -72,12 +76,23 @@ def train(epochs, batch_size_floor):
             ben_batch = xtrain_ben[ben_index]
             benign_batch = tf.expand_dims(ben_batch, 0)
             # call train step to deal with outputs gradients, and loss functions
-            train_step(malicious_batch, benign_batch, generator, discriminator)
+            adversarial, gen_label, real_label = train_step(malicious_batch, benign_batch, generator, discriminator)
             train_step_count += 1
+            # print the data output by training step and append to mal_list
+            mal_feats = malicious_batch.numpy()
+            print("Malicious Features: {}".format(mal_feats))
+            adversarial_feats = adversarial.numpy()
+            print("Adversarial Features: {}".format(adversarial_feats))
+            prediction = gen_label.numpy()
+            print("Prediction: {}\n".format(prediction))
+            mal_list.append((mal_feats, adversarial_feats, prediction))
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 15 == 0:
             print("Should save here")
             # checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
         epoch_count += 1
-
+    # convert mal_list into a DataFrame
+    adversarial_df = pd.DataFrame(mal_list)
+    adversarial_df.columns = ['Original Features', 'Adversarial Features', 'Predicted Label']
+    print(adversarial_df.head())

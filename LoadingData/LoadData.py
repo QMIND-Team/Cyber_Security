@@ -4,10 +4,9 @@ import tensorflow as tf
 from random import seed, randint
 import warnings
 
-from LoadingData.VisualizeData import init_vectorized_features, read_test_train
+from VisualizingData.VisualizeData import init_vectorized_features, read_test_train
 
 warnings.simplefilter('ignore')
-pd.set_option('display.max_columns', None)
 
 
 # Load the data from the data set and create x, y variables for both malicious an benign examples
