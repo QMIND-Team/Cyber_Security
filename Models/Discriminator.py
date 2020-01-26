@@ -1,10 +1,11 @@
 from keras import Sequential
 from keras.layers import InputLayer, Dense, Activation
+import tensorflow as tf
 
 
 # initialize the discriminator of the GAN
 def init_discriminator():
-    model = Sequential()
+    model = tf.keras.Sequential()
     # Input layer to model accepting Input(batch_size, input_size) for the size of
     model.add(InputLayer(input_shape=(2381,)))
 

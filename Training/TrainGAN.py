@@ -6,7 +6,8 @@ import os
 
 from Models.Generator import init_generator
 from Models.Discriminator import init_discriminator
-from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
+from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, \
+    checkpoint, checkpoint_prefix
 from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -48,7 +49,7 @@ def train(epochs, batch_size_floor):
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", 100000)
+        "C:/Python36/Lib/site-packages/ember/ember", 1000)
     # initialize the generator model and compile it with the generator_optimizer
     generator = init_generator()
     generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
@@ -87,9 +88,9 @@ def train(epochs, batch_size_floor):
             print("Prediction: {}\n".format(prediction))
             mal_list.append((mal_feats, adversarial_feats, prediction))
         # call the save checkpoint function every 15 epochs
-        if (epoch + 1) % 15 == 0:
+        if (epoch + 1) % 5 == 0:
             print("Should save here")
-            # checkpoint.save(checkpoint_prefix)
+            checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
         epoch_count += 1
     # convert mal_list into a DataFrame

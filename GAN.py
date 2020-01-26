@@ -1,7 +1,9 @@
+from Models.Detector import checkpoint, checkpoint_dir
 from Training.TrainGAN import train
+import tensorflow as tf
 
-EPOCHS = 50
-BATCH_SIZE_FLOOR = 391
+EPOCHS = 10
+BATCH_SIZE_FLOOR = 60
 
 
 # compile all the functionality of the GAN
@@ -42,7 +44,7 @@ def GAN():
     print(predicted_label)
     """
     train(EPOCHS, BATCH_SIZE_FLOOR)
-
+    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
 if __name__ == '__main__':
     GAN()
