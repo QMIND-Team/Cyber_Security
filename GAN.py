@@ -1,4 +1,3 @@
-from Models.Detector import checkpoint, checkpoint_dir
 from Training.TrainGAN import train
 import tensorflow as tf
 
@@ -44,7 +43,6 @@ def GAN():
     print(predicted_label)
     """
     train(EPOCHS, BATCH_SIZE_FLOOR)
-    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
 if __name__ == '__main__':
     GAN()

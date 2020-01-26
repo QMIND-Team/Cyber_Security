@@ -4,10 +4,11 @@ import pandas as pd
 import time
 import os
 
+#from Models import Discriminator, Generator
 from Models.Generator import init_generator
 from Models.Discriminator import init_discriminator
 from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, \
-    checkpoint, checkpoint_prefix
+     chckpnt
 from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -88,9 +89,9 @@ def train(epochs, batch_size_floor):
             print("Prediction: {}\n".format(prediction))
             mal_list.append((mal_feats, adversarial_feats, prediction))
         # call the save checkpoint function every 15 epochs
-        if (epoch + 1) % 5 == 0:
+        if (epoch + 1) % 1 == 0:
             print("Should save here")
-            checkpoint.save(checkpoint_prefix)
+            chckpnt(discriminator, generator)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
         epoch_count += 1
     # convert mal_list into a DataFrame
