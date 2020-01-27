@@ -26,6 +26,7 @@ def generator_loss(malicious_examples):
     return cross_entropy(tf.ones_like(malicious_examples), malicious_examples)
 
 
+# Todo: specify directory to save checkpoints
 def chckpnt(Disc, Gen):
     checkpoint_dir = 'C:/Users/Home/Desktop/GAN_checkpoints'
     checkpoint_prefix = os.path.join(checkpoint_dir, "checkpoint")
@@ -33,9 +34,8 @@ def chckpnt(Disc, Gen):
                                      discriminator_optimizer=discriminator_optimizer,
                                      generator=Gen,
                                      discriminator=Disc)
-    checkpoint.save(checkpoint_prefix)
+    return checkpoint, checkpoint_prefix
 
-    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
 
 

@@ -44,5 +44,6 @@ def GAN():
     """
     train(EPOCHS, BATCH_SIZE_FLOOR)
 
+
 if __name__ == '__main__':
     GAN()

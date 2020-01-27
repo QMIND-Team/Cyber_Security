@@ -50,16 +50,13 @@ def train(epochs, batch_size_floor):
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "C:/Python36/Lib/site-packages/ember/ember", 1000)
+        "E:/QMIND/DataSet/ember", 1000)
     # initialize the generator model and compile it with the generator_optimizer
     generator = init_generator()
     generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     # initialize the discriminator model and compile it with the discriminator_optimizer
     discriminator = init_discriminator()
     discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    # Todo: implement the save_checkpoint functionality to compare the outputs of the GAN
-    # checkpoint_prefix, checkpoint = save_checkpoint(generator, generator_optimizer, discriminator,
-    #                                                 discriminator_optimizer)
     # loop for the number of specified epochs and display to user the current epoch of training
     epoch_count = 1
     for epoch in range(epochs):
