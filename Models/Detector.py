@@ -34,6 +34,7 @@ def chckpnt(Disc, Gen):
                                      discriminator_optimizer=discriminator_optimizer,
                                      generator=Gen,
                                      discriminator=Disc)
+    checkpoint.save(file_prefix=checkpoint_prefix)
     return checkpoint, checkpoint_prefix
 
 
