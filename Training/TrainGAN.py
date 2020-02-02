@@ -48,17 +48,16 @@ def train(epochs, batch_size_floor):
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", 100000)
+        "E:/QMIND/DataSet/ember", 5000)
+
     # initialize the generator model and compile it with the generator_optimizer
     generator = init_generator()
     generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     # initialize the discriminator model and compile it with the discriminator_optimizer
     discriminator = init_discriminator()
     discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    # Todo: implement the save_checkpoint functionality to compare the outputs of the GAN
-    # checkpoint_prefix, checkpoint = save_checkpoint(generator, generator_optimizer, discriminator,
-    #                                                 discriminator_optimizer)
     # loop for the number of specified epochs and display to user the current epoch of training
+
     epoch_count = 1
     for epoch in range(epochs):
         start = time.time()
@@ -67,17 +66,21 @@ def train(epochs, batch_size_floor):
         train_step_count = 1
         for training_step in range(xtrain_mal.shape[0] // batch_size_floor):
             print("Training Step {}/{}".format(train_step_count, xtrain_mal.shape[0] // batch_size_floor))
+
             # generate a random number to access vectorized features from the malicious tensor at random
             mal_index = np.random.randint(0, xtrain_mal.shape[0])
             mal_batch = xtrain_mal[mal_index]
             malicious_batch = tf.expand_dims(mal_batch, 0)
+
             # generate a random number to access vectorized features from the benign tensor at random
             ben_index = np.random.randint(0, xtrain_ben.shape[0])
             ben_batch = xtrain_ben[ben_index]
             benign_batch = tf.expand_dims(ben_batch, 0)
+
             # call train step to deal with outputs gradients, and loss functions
             adversarial, gen_label, real_label = train_step(malicious_batch, benign_batch, generator, discriminator)
             train_step_count += 1
+
             # print the data output by training step and append to mal_list
             mal_feats = malicious_batch.numpy()
             print("Malicious Features: {}".format(mal_feats))
@@ -86,13 +89,16 @@ def train(epochs, batch_size_floor):
             prediction = gen_label.numpy()
             print("Prediction: {}\n".format(prediction))
             mal_list.append((mal_feats, adversarial_feats, prediction))
+
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 15 == 0:
             print("Should save here")
             # checkpoint.save(checkpoint_prefix)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
+
         epoch_count += 1
     # convert mal_list into a DataFrame
     adversarial_df = pd.DataFrame(mal_list)
     adversarial_df.columns = ['Original Features', 'Adversarial Features', 'Predicted Label']
     print(adversarial_df.head())
+    return generator, discriminator

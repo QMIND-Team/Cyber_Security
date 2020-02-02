@@ -1,5 +1,5 @@
 from keras import Sequential
-from keras.layers import InputLayer, Dense, Activation
+from keras.layers import InputLayer, Dense, Activation, BatchNormalization, LeakyReLU
 
 
 # initialize the discriminator of the GAN
@@ -10,7 +10,12 @@ def init_discriminator():
 
     # Initial growth with base size of 2381, and secondary layer size as calculated for generator
     model.add(Dense(3952, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
+
     model.add(Dense(3952, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU())
 
     # Final output, size of one as we want a single output predicting malicious or benign
     model.add(Dense(1))

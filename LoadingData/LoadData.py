@@ -1,11 +1,14 @@
 import os
 import ember
+import time
 import pandas as pd
 import tensorflow as tf
 from random import seed, randint
 import warnings
 
 warnings.simplefilter('ignore')
+
+seed(time.time())
 
 
 # Create .dat files containing the data from Ember
@@ -131,7 +134,6 @@ def malicious_examples(features_df):
 
 # from a dataframe of only malicious files select a single file at random
 def single_malicious_example(malicious_df):
-    seed(1)
     example = malicious_df['Vectorized Features'][randint(0, 300000)]
     return example
 
@@ -145,7 +147,6 @@ def benign_examples(features_df):
 
 # from a dataframe of only benign files select a single file at random
 def single_benign_example(benign_df):
-    seed(1)
     example = benign_df['Vectorized Features'][randint(0, 300000)]
     return example
 

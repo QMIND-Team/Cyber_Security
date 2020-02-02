@@ -1,6 +1,7 @@
 import tensorflow as tf
 from keras.models import Model
-from keras.layers import Input, Dense, Concatenate, BatchNormalization, LeakyReLU
+from keras.layers import Input, Dense, BatchNormalization, LeakyReLU
+from keras.layers.merge import Concatenate
 
 
 # initialize the generator segment of the GAN
@@ -12,19 +13,22 @@ def init_generator():
     noise = Input((2381,))
 
     # Apply noise to input of size 2381
-    concat_layer = Concatenate()([malware, noise])
-    # assert concat_layer.output_shape(None, 2381)
+    concat_layer = Concatenate(axis=1)([malware, noise])
 
     # Hidden layer of size 3952
-    dense_layer1 = Dense(3952, activation='relu')(concat_layer)
-    batch_norm1 = BatchNormalization()(dense_layer1)
-    leaky1 = LeakyReLU()(batch_norm1)
+    dense_layer1 = Dense(3952)(concat_layer)
+    batch_norm1 = BatchNormalization(momentum=0.8)(dense_layer1)
+    leaky1 = LeakyReLU(alpha=0.2)(batch_norm1)
 
     # Output layer of size 2381
-    dense_layer2 = Dense(2381, activation="sigmoid")(leaky1)
-    batch_norm2 = BatchNormalization()(dense_layer2)
-    output = LeakyReLU()(batch_norm2)
+    dense_layer2 = Dense(3952)(leaky1)
+    batch_norm2 = BatchNormalization(momentum=0.8)(dense_layer2)
+    leaky2 = LeakyReLU(alpha=0.2)(batch_norm2)
 
+    output = Dense(2381, activation='tanh')(leaky2)
+
+    # output = Activation("tanh")(leaky2)
+    # output = maximum([activation, malware])
     gen = Model(inputs=[malware, noise], outputs=output)
     return gen
 
