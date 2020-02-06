@@ -1,4 +1,4 @@
-tensorflow == 2.0.0
+tensorflow == 2.0.1
 lief == 0.10.1
 pandas == 0.25.3
 keras == 2.3.1
