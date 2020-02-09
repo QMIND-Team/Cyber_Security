@@ -48,7 +48,7 @@ def train(epochs, batch_size_floor):
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", 5000)
+        "E:/QMIND/DataSet/ember", 100000)
 
     # initialize the generator model and compile it with the generator_optimizer
     generator = init_generator()
@@ -58,8 +58,18 @@ def train(epochs, batch_size_floor):
     discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     # loop for the number of specified epochs and display to user the current epoch of training
 
+    discriminator.trainable_weights = False
+    frozen_model = "discriminator"
     epoch_count = 1
     for epoch in range(epochs):
+        if epoch_count % 2 == 0 and frozen_model == "discriminator":
+            discriminator.trainable_weights = True
+            generator.trainable_weights = False
+            frozen_model = "generator"
+        elif epoch_count % 2 == 0 and frozen_model == "generator":
+            generator.trainable_weights = True
+            discriminator.trainable_weights = False
+            frozen_model = "discriminator"
         start = time.time()
         print("Epoch {}/{}".format(epoch_count, epochs))
         # loop for the number of training steps based on the batch size of the tensor and the batch_size_floor parameter

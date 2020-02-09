@@ -27,7 +27,6 @@ def init_generator():
 
     output = Dense(2381, activation='tanh')(leaky2)
 
-    # output = Activation("tanh")(leaky2)
     # output = maximum([activation, malware])
     gen = Model(inputs=[malware, noise], outputs=output)
     return gen
