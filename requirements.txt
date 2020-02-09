@@ -3,3 +3,4 @@ lief == 0.10.1
 pandas == 0.25.3
 keras == 2.3.1
 numpy == 1.17.4
+virustotal-api == 1.1.11
