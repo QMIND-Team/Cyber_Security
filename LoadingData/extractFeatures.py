@@ -32,8 +32,10 @@ def vectorizePEs(inputPath):
 
 def readMemmap(file):
     # extracting data from a .dat file
+    dim1 = file.split("/")
+    dim1 = dim1[-1].split("_")
     extractor = ember.PEFeatureExtractor()
-    shape = (int(file.split("_")[0]), extractor.dim)
+    shape = (int(dim1[0]), extractor.dim)
     data = np.memmap(file, dtype=np.float32, mode="r+", shape=shape)
     return data
 
@@ -73,5 +75,4 @@ if __name__ == "__main__":
     # parse the file into the proper sizing from reading the memmap
 
     #vectorizePEs(newFilePath)
-    # split_10k_files(dataPath,newFilePath)
-    print(readMemmap("data/10000_files_features.dat"))
+    #split_10k_files(dataPath,newFilePath)
