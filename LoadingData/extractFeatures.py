@@ -32,7 +32,7 @@ def vectorizePEs(inputPath):
 
 def readMemmap(file):
     # extracting data from a .dat file
-    dim1 = file.split("/")
+    dim1 = file.split("\\")
     dim1 = dim1[-1].split("_")
     extractor = ember.PEFeatureExtractor()
     shape = (int(dim1[0]), extractor.dim)
@@ -76,3 +76,6 @@ if __name__ == "__main__":
 
     #vectorizePEs(newFilePath)
     #split_10k_files(dataPath,newFilePath)
+    memmap = readMemmap("C:\\Users\\willm\\PycharmProjects\\Cyber_Security\\data\\10000_files_features.dat")
+    print(memmap)
+    print(len(memmap))

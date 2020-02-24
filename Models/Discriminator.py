@@ -4,7 +4,7 @@ from keras.layers import InputLayer, Dense, Activation, BatchNormalization, Leak
 
 # initialize the discriminator of the GAN
 def init_discriminator():
-    model = Sequential()
+    model = Sequential(name="Discriminator")
     # Input layer to model accepting Input(batch_size, input_size) for the size of
     model.add(InputLayer(input_shape=(2381,)))
 
