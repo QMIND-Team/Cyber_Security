@@ -41,7 +41,7 @@ def GAN():
     predicted_label = discriminate_examples(adversarial_example, discriminator)
     print(predicted_label)
     """
-    train(EPOCHS, BATCH_SIZE_FLOOR)
+    train(EPOCHS, BATCH_SIZE_FLOOR, 5000)
 
 
 if __name__ == '__main__':
