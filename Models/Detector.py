@@ -1,4 +1,5 @@
 import tensorflow as tf
+import os
 
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -19,3 +20,13 @@ def discriminator_loss(benign_examples, malicious_examples):
 def generator_loss(malicious_examples):
     return cross_entropy(tf.ones_like(malicious_examples), malicious_examples)
 
+
+def chckpnt(Disc, Gen):
+    checkpoint_dir = 'C:/Users/willm/pycharmprojects/Cyber_Security/Training_Checkpoint/'
+    checkpoint_prefix = os.path.join(checkpoint_dir, "checkpoint")
+    checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
+                                     discriminator_optimizer=discriminator_optimizer,
+                                     generator=Gen,
+                                     discriminator=Disc)
+    checkpoint.save(file_prefix=checkpoint_prefix)
+    return checkpoint, checkpoint_prefix

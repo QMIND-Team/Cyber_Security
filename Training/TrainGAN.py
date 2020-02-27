@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from Models.Generator import init_generator
 from Models.Discriminator import init_discriminator
-from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
+from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, chckpnt
 from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -119,13 +119,15 @@ def train(epochs, batch_size_floor, num_load_files):
             adversarial_feats = adversarial.numpy()
             print("Adversarial Features: {}".format(adversarial_feats))
             prediction = gen_label.numpy()
-            if prediction == [[0.]]:
-                print("Prediction: Benign\t\tLabel: {}\n".format(prediction))
+            if prediction < [[0.5]]:
+                label = [[0.]]
+                print("Prediction: Benign\t\tLabel: {}\n".format(label))
                 benign_predictions += 1
-            elif prediction == [[1.]]:
-                print("Prediction: Malicious\t\tLabel: {}\n".format(prediction))
+            elif prediction >= [[0.5]]:
+                label = [[1.]]
+                print("Prediction: Malicious\t\tLabel: {}\n".format(label))
                 malicious_predictions += 1
-            mal_list.append((mal_feats, adversarial_feats, prediction))
+            mal_list.append((mal_feats, adversarial_feats, label))
 
         print("Generator Losses: {}".format(gen_loss.numpy()))
         print("Discriminator Losses: {}".format(disc_loss.numpy()), end="\n\n")
@@ -135,8 +137,8 @@ def train(epochs, batch_size_floor, num_load_files):
 
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 15 == 0:
-            print("Should save here")
-            # checkpoint.save(checkpoint_prefix)
+            print("Checkpoint Reached - Saving Weights")
+            chckpnt(discriminator, generator)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
 
         epoch_count += 1
