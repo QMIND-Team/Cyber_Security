@@ -45,7 +45,7 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
 
 
 # train the GAN
-def train(epochs, batch_size_floor, num_load_files):
+def train(epochs, batch_size_floor, num_load_files, folder):
     global benign_predictions
     global malicious_predictions
 
@@ -57,7 +57,7 @@ def train(epochs, batch_size_floor, num_load_files):
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", num_load_files)
+        folder, num_load_files)
 
     # initialize the generator model and compile it with the generator_optimizer
     print()
