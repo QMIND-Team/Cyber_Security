@@ -23,34 +23,55 @@ def read_metadata(dataset_dir):
 
 
 # Break down metadata into an easily visible manner as well as providing histogram depicting each type of file
-def visualize_metadata(metadata_df):
+def visualize_metadata(meta_df):
     print("Metadata")
     # apply sampling to the metadata in order to only load a specific fraction of the files
-    meta_df = metadata_df.sample(frac=0.05, random_state=1)
     # create a list for each of the types of files and split metadata into their respective lists
-    malicious = meta_df[meta_df['label'] == 1]
-    benign = meta_df[meta_df['label'] == 0]
-    unlabeled = meta_df[meta_df['label'] == -1]
-    print("Number of Malicious Files: {}".format(len(malicious)))
-    print("Number of Benign Files: {}".format(len(benign)))
-    print("Number of Unlabeled Files: {}\n".format(len(unlabeled)))
+    malicious_train = meta_df[(meta_df['label'] == 1) & (meta_df['subset'] == 'train')]
+    benign_train = meta_df[(meta_df['label'] == 0) & (meta_df['subset'] == 'train')]
+    unlabeled_train = meta_df[(meta_df['label'] == -1) & (meta_df['subset'] == 'train')]
+    print("Number of Malicious Files in Train Subset: {}".format(len(malicious_train)))
+    print("Number of Benign Files in Train Subset: {}".format(len(benign_train)))
+    print("Number of Unlabeled Files in Train Subset: {}\n".format(len(unlabeled_train)))
+
+    malicious_test = meta_df[(meta_df['label'] == 1) & (meta_df['subset'] == 'test')]
+    benign_test = meta_df[(meta_df['label'] == 0) & (meta_df['subset'] == 'test')]
+    unlabeled_test = meta_df[(meta_df['label'] == -1) & (meta_df['subset'] == 'test')]
+    print("Number of Malicious Files in Test Subset: {}".format(len(malicious_test)))
+    print("Number of Benign Files in Test Subset: {}".format(len(benign_test)))
+    print("Number of Unlabeled Files in Test Subset: {}\n".format(len(unlabeled_test)))
 
     # show the ratio of types of files compared to the overall number of files
-    mal_split = len(malicious) / len(meta_df)
-    ben_split = len(benign) / len(meta_df)
-    unlab_split = len(unlabeled) / len(meta_df)
-    print("Malicious File Ratio: {}".format(mal_split))
-    print("Benign File Ratio: {}".format(ben_split))
-    print("Unlabeled File Ratio: {}\n".format(unlab_split))
+    mal_split_train = len(malicious_train) / len(meta_df)
+    ben_split_train = len(benign_train) / len(meta_df)
+    unlab_split_train = len(unlabeled_train) / len(meta_df)
+    print("Malicious File Ratio: {}".format(mal_split_train))
+    print("Benign File Ratio: {}".format(ben_split_train))
+    print("Unlabeled File Ratio: {}\n".format(unlab_split_train))
+
+    # show the ratio of types of files compared to the overall number of files
+    mal_split_test = len(malicious_test) / len(meta_df)
+    ben_split_test = len(benign_test) / len(meta_df)
+    unlab_split_test = len(unlabeled_test) / len(meta_df)
+    print("Malicious File Ratio: {}".format(mal_split_test))
+    print("Benign File Ratio: {}".format(ben_split_test))
+    print("Unlabeled File Ratio: {}\n".format(unlab_split_test))
 
     # Get number of files per sub-category
-    mal_len = len(malicious)
-    ben_len = len(benign)
-    unlab_len = len(unlabeled)
+    mal_len_train = len(malicious_train)
+    ben_len_train = len(benign_train)
+    unlab_len_train = len(unlabeled_train)
+
+    # Get number of files per sub-category
+    mal_len_test = len(malicious_test)
+    ben_len_test = len(benign_test)
+    unlab_len_test = len(unlabeled_test)
 
     # display through a histogram
-    plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len, ben_len, unlab_len])
+    plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len_train, ben_len_train, unlab_len_train], label="Training Set")
+    plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len_test, ben_len_test, unlab_len_test], label="Testing Set")
     plt.ylabel("Numbers of Files per Subset")
+    plt.legend()
     plt.show()
 
 
@@ -87,7 +108,7 @@ def visualize_vectorized_features(X_data, y_data):
     return feat_df
 
 
-"""
+# """
 if __name__ == '__main__':
     # todo change this file path for where you have ember dataset stored
     dataset = "E:/QMIND/DataSet/ember"
@@ -109,8 +130,8 @@ if __name__ == '__main__':
     # print("y_test data: \n{}\n".format(y_test))
 
     metadata = read_metadata(dataset)
-    print("Metadata Dataframe: \n{}\n".format(metadata))
+    print("Metadata Dataframe: \n{}\n".format(metadata['subset']))
 
     visualize_metadata(metadata)
     # train_df = visualize_vectorized_features(X_train, y_train)
-"""
+# """

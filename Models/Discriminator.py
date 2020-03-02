@@ -1,4 +1,6 @@
 import tensorflow as tf
+from PIL import Image
+import matplotlib.pyplot as plt
 
 
 # initialize the discriminator of the GAN
@@ -28,3 +30,24 @@ def init_discriminator():
 def discriminate_examples(example, discriminator):
     disc_label = discriminator.predict_on_batch([example])
     return disc_label
+
+
+def visualize_mal_prediction():
+    virus = "../Assets/Red_Virus.png"
+    img = Image.open(virus)
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+def visualize_ben_prediction():
+    check = "../Assets/Green_Check.png"
+    img = Image.open(check)
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+if __name__ == '__main__':
+    visualize_mal_prediction()
+    visualize_ben_prediction()

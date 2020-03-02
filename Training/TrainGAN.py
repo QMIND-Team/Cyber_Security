@@ -72,10 +72,7 @@ def train(epochs, batch_size_floor, num_load_files):
     discriminator.summary()
     print(end="\n\n")
 
-    # loop for the number of specified epochs and display to user the current epoch of training
-    for layers in generator.layers:
-        layers.trainable = False
-    frozen_model = "generator"
+    frozen_model = "discriminator"
     epoch_count = 1
     for epoch in range(epochs):
         if epoch_count % 1 == 0 and frozen_model == "discriminator":
