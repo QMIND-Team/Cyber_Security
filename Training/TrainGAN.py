@@ -3,13 +3,16 @@ import numpy as np
 import pandas as pd
 import time
 import os
+import matplotlib.pyplot as plt
 
 from Models.Generator import init_generator
 from Models.Discriminator import init_discriminator
-from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer
+from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, chckpnt
 from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+malicious_predictions = 0
+benign_predictions = 0
 
 
 # passing the input data into the generator and discriminator and applying the loss function and gradient to the models
@@ -38,28 +41,56 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
     # apply the gradients created above to the respective optimizer
     generator_optimizer.apply_gradients(zip(generator_gradient, generator.trainable_weights))
     discriminator_optimizer.apply_gradients(zip(discriminator_gradient, discriminator.trainable_weights))
-    return adversarial_example, generated_label, real_label
+    return adversarial_example, generated_label, real_label, gen_loss, disc_loss
 
 
 # train the GAN
-def train(epochs, batch_size_floor):
+def train(epochs, batch_size_floor, num_load_files):
+    global benign_predictions
+    global malicious_predictions
+
     # declaring a list which will later be used to create a dataframe to depict the results of training
     mal_list = list()
+    gen_loss_list = list()
+    disc_loss_list = list()
+
     # load data from where ember is stored on the users computer
     # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        "E:/QMIND/DataSet/ember", 5000)
+        "E:/QMIND/DataSet/ember", num_load_files)
 
     # initialize the generator model and compile it with the generator_optimizer
+    print()
     generator = init_generator()
-    generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+    generator.compile(generator_optimizer, loss='binary_crossentropy', metrics=['accuracy', 'mse'])
+    generator.summary()
+    print(end="\n\n")
+
     # initialize the discriminator model and compile it with the discriminator_optimizer
     discriminator = init_discriminator()
-    discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    # loop for the number of specified epochs and display to user the current epoch of training
+    discriminator.compile(discriminator_optimizer, loss='binary_crossentropy', metrics=['accuracy', 'mse'])
+    discriminator.summary()
+    print(end="\n\n")
 
+    # loop for the number of specified epochs and display to user the current epoch of training
+    for layers in generator.layers:
+        layers.trainable = False
+    frozen_model = "generator"
     epoch_count = 1
     for epoch in range(epochs):
+        if epoch_count % 1 == 0 and frozen_model == "discriminator":
+            for layers in discriminator.layers:
+                layers.trainable = True
+            for layers in generator.layers:
+                layers.trainable = False
+            frozen_model = "generator"
+        elif epoch_count % 1 == 0 and frozen_model == "generator":
+            for layers in generator.layers:
+                layers.trainable = True
+            for layers in discriminator.layers:
+                layers.trainable = False
+            frozen_model = "discriminator"
+
         start = time.time()
         print("Epoch {}/{}".format(epoch_count, epochs))
         # loop for the number of training steps based on the batch size of the tensor and the batch_size_floor parameter
@@ -78,7 +109,8 @@ def train(epochs, batch_size_floor):
             benign_batch = tf.expand_dims(ben_batch, 0)
 
             # call train step to deal with outputs gradients, and loss functions
-            adversarial, gen_label, real_label = train_step(malicious_batch, benign_batch, generator, discriminator)
+            adversarial, gen_label, real_label, gen_loss, disc_loss = train_step(malicious_batch, benign_batch,
+                                                                                 generator, discriminator)
             train_step_count += 1
 
             # print the data output by training step and append to mal_list
@@ -87,13 +119,26 @@ def train(epochs, batch_size_floor):
             adversarial_feats = adversarial.numpy()
             print("Adversarial Features: {}".format(adversarial_feats))
             prediction = gen_label.numpy()
-            print("Prediction: {}\n".format(prediction))
-            mal_list.append((mal_feats, adversarial_feats, prediction))
+            if prediction < [[0.5]]:
+                label = [[0.]]
+                print("Prediction: Benign\t\tLabel: {}\n".format(label))
+                benign_predictions += 1
+            elif prediction >= [[0.5]]:
+                label = [[1.]]
+                print("Prediction: Malicious\t\tLabel: {}\n".format(label))
+                malicious_predictions += 1
+            mal_list.append((mal_feats, adversarial_feats, label))
+
+        print("Generator Losses: {}".format(gen_loss.numpy()))
+        print("Discriminator Losses: {}".format(disc_loss.numpy()), end="\n\n")
+
+        gen_loss_list.append(gen_loss.numpy())
+        disc_loss_list.append(disc_loss.numpy())
 
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 15 == 0:
-            print("Should save here")
-            # checkpoint.save(checkpoint_prefix)
+            print("Checkpoint Reached - Saving Weights")
+            chckpnt(discriminator, generator)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
 
         epoch_count += 1
@@ -101,4 +146,26 @@ def train(epochs, batch_size_floor):
     adversarial_df = pd.DataFrame(mal_list)
     adversarial_df.columns = ['Original Features', 'Adversarial Features', 'Predicted Label']
     print(adversarial_df.head())
-    return generator, discriminator
+    return generator, discriminator, (benign_predictions, malicious_predictions), (gen_loss_list, disc_loss_list)
+
+
+def display_training_predictions(ben_predictions, mal_predictions):
+    labels = 'Benign', 'Malicious'
+    sizes = [ben_predictions, mal_predictions]
+    title = 'Discriminator Predictions During Training'
+    colours = ['blue', 'red']
+    explode = (0.1, 0)
+
+    plt.pie(sizes, explode=explode, labels=labels, colors=colours, autopct='%1.1f%%', shadow=True)
+    plt.title(title)
+    plt.show()
+
+
+def plot_loss_functions(gLoss_list, dLoss_list, epochs):
+    plt.plot(range(0, epochs), gLoss_list, label="Generator Loss")
+    plt.plot(range(0, epochs), dLoss_list, label="Discriminator Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss Value")
+    plt.legend()
+    plt.title("Generator and Discriminator Loss Functions")
+    plt.show()
