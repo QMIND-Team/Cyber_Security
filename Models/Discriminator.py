@@ -32,6 +32,7 @@ def discriminate_examples(example, discriminator):
     return disc_label
 
 
+# on discriminator prediction of [[1.]] display a visual to indicate that it is malicious
 def visualize_mal_prediction():
     virus = "../Assets/Red_Virus.png"
     img = Image.open(virus)
@@ -40,6 +41,7 @@ def visualize_mal_prediction():
     plt.show()
 
 
+# on discriminator prediction of [[0.]] display a visual to indicate that it is benign
 def visualize_ben_prediction():
     check = "../Assets/Green_Check.png"
     img = Image.open(check)
@@ -47,7 +49,3 @@ def visualize_ben_prediction():
     plt.axis('off')
     plt.show()
 
-
-if __name__ == '__main__':
-    visualize_mal_prediction()
-    visualize_ben_prediction()

@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
         exit()
     currentDir = "C:\\Program Files"
-    saveDir = "D:\\randomBenign"
+    saveDir = "C:\\randomBenign"
     searchDir(currentDir,saveDir)
 
     currentDir = "C:\\Program Files(x86)"
