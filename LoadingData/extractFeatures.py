@@ -67,12 +67,12 @@ def split_10k_files(filePath,newFilePath):
             print(i+1,"iterations done")
 
 if __name__ == "__main__":
-    dataPath = "C:\Programming\Github_projects\Ember\extraData\malicious"
-    newFilePath = "C:\Programming\Github_projects\Ember\\tenkFiles2"
+    dataPath = "D:\VirusShare_complete\Files9999"
+    newFilePath = "D:\VirusShare_complete\\10thousandFiles"
 
-    outPutFile = "13476_files_features.dat" # only needed to use when extracting features from memmap
+    #outPutFile = "13476_files_features.dat" # only needed to use when extracting features from memmap
     # file name is created in part by num of files that went into it, and is needed to later
     # parse the file into the proper sizing from reading the memmap
 
-    #vectorizePEs(newFilePath)
+    vectorizePEs(newFilePath)
     #split_10k_files(dataPath,newFilePath)
