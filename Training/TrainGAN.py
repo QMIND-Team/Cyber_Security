@@ -55,7 +55,6 @@ def train(epochs, batch_size_floor, num_load_files, folder):
     disc_loss_list = list()
 
     # load data from where ember is stored on the users computer
-    # Todo: Change this path to where Ember dataset is saved on respective computer
     xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
         folder, num_load_files)
 

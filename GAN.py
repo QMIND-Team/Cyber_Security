@@ -12,5 +12,5 @@ def GAN(folder):
 
 
 if __name__ == '__main__':
-    datasetFolder = "enter your path here"
+    datasetFolder = "E:\QMIND\DataSet\ember"
     GAN(datasetFolder)
