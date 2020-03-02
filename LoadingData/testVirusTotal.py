@@ -34,8 +34,8 @@ def checkFileFromDIR(key,folder,file):
         else:
             print(response['response_code'])                    #something went wrong, print out response code so we can find what it was
     except KeyError as e:
-        print(response)
-
+        if response['results']['response_code'] == 0:
+            os.remove(folder+"\\"+file)
 
 def massTest(folder, keys, virusShare = False):
     """
@@ -108,10 +108,10 @@ if __name__=="__main__":
     
     #singleTest("C:\Programming\Github_projects\Ember\extraData\VirusShare_4ea73d1d9fd930aab23dba74515f6d23",API_KEYS[2],virusShare = True)
     
-    massTest("C:\\Users\\ryant\\Downloads\\VirusShare_00045",API_KEYS,True)
+    massTest("D:\VirusShare_complete\VirusShare_complete",API_KEYS,True)
 
     #read in metaadata about what antiviruses said from the json files
-    
+    """
     metadataDIR = "C:\Programming\Github_projects\Ember\extraData\malicious\metadata.json"
     with open(metadataDIR,'r') as f:
         metadata = [json.loads(file) for file in f.readlines()]
@@ -119,6 +119,7 @@ if __name__=="__main__":
     for data in metadata:
         print(json.dumps(data,sort_keys = False,indent = True))
         x = input()
+    """
     
 
     
