@@ -34,8 +34,7 @@ def checkFileFromDIR(key,folder,file):
         else:
             print(response['response_code'])                    #something went wrong, print out response code so we can find what it was
     except KeyError as e:
-        if response['results']['response_code'] == 0:
-            os.remove(folder+"\\"+file)
+        print(response)
 
 def massTest(folder, keys, virusShare = False):
     """
