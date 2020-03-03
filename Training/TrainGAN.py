@@ -45,7 +45,7 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
 
 
 # train the GAN
-def train(epochs, batch_size_floor, num_load_files, folder):
+def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, emberDS = True):
     global benign_predictions
     global malicious_predictions
 
@@ -55,8 +55,12 @@ def train(epochs, batch_size_floor, num_load_files, folder):
     disc_loss_list = list()
 
     # load data from where ember is stored on the users computer
-    xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-        folder, num_load_files)
+    if emberDS:
+        xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
+                folder, num_load_files,emberDS)
+    
+    else:
+        xtrain_mal, xtrain_ben = load_dataset(folder, num_load_files, emberDS)
 
     # initialize the generator model and compile it with the generator_optimizer
     print()
@@ -134,7 +138,7 @@ def train(epochs, batch_size_floor, num_load_files, folder):
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 15 == 0:
             print("Checkpoint Reached - Saving Weights")
-            chckpnt(discriminator, generator)
+            chckpnt(discriminator, generator, checkpoint_dir)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
 
         epoch_count += 1
