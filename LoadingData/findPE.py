@@ -54,9 +54,10 @@ def checkPE(folder):
         good = fileSizeCheck(folder+"\\"+f,1,10000)
         if not good:
             os.remove(folder+"\\"+f)
-        good = Isolate_PE_From_Files(folder+"\\"+f)
-        if not good:
-            os.remove(folder+"\\"+f)
+        else:
+            good = Isolate_PE_From_Files(folder+"\\"+f)
+            if not good:
+                os.remove(folder+"\\"+f)
         
 
 def help():
