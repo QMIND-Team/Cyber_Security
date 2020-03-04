@@ -51,7 +51,7 @@ def fileSizeCheck(file, minSize, maxSize):
 
 def checkPE(folder):
     for f in os.listdir(folder):
-        good = fileSiseCheck(folder+"\\"+f,1,10000)
+        good = fileSizeCheck(folder+"\\"+f,1,10000)
         if not good:
             os.remove(folder+"\\"+f)
         good = Isolate_PE_From_Files(folder+"\\"+f)
