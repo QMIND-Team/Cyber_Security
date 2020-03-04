@@ -4,7 +4,13 @@ import os,shutil,json
 from ember.features import PEFeatureExtractor
 import numpy as np
 from tempfile import mkdtemp 
-import testVirusTotal
+
+
+def readMetadata(file):
+    with open(file, 'r') as f:
+        metadata = [json.loads(line) for line in f.readlines()]
+    return metadata
+
 
 def vectorizePEs(inputPath):
     extractor = PEFeatureExtractor()
@@ -46,7 +52,7 @@ def split_10k_files(filePath,newFilePath):
     on ammount so it would be small enough to fit on github
     """
     extractor = ember.PEFeatureExtractor()
-    metadata = testVirusTotal.readMetadata(filePath+'\metadata.json')
+    metadata = readMetadata(filePath+'\metadata.json')
     for i in range(10000):
         try:                                    #index error would mean out of files left, so it just breaks the function where it is
             file = os.listdir(filePath)[1]      #has to be index 1 because index 0 is the .json file
@@ -68,14 +74,14 @@ def split_10k_files(filePath,newFilePath):
 
 if __name__ == "__main__":
     dataPath = "D:\VirusShare_complete\Files9999"
-    newFilePath = "D:\VirusShare_complete\\10thousandFiles"
+    newFilePath = "D:\\randomBenign"
 
     #outPutFile = "13476_files_features.dat" # only needed to use when extracting features from memmap
     # file name is created in part by num of files that went into it, and is needed to later
     # parse the file into the proper sizing from reading the memmap
 
-    vectorizePEs(newFilePath)
+    #vectorizePEs(newFilePath)
     #split_10k_files(dataPath,newFilePath)
-    memmap = readMemmap("C:\\Users\\willm\\PycharmProjects\\Cyber_Security\\data\\10000_files_features.dat")
-    print(memmap)
-    print(len(memmap))
+    #memmap = readMemmap("C:\\Users\\willm\\PycharmProjects\\Cyber_Security\\data\\10000_files_features.dat")
+    #print(memmap)
+    #print(len(memmap))
