@@ -81,4 +81,4 @@ if __name__ == "__main__":
     if not path.isdir(arguments[1]):
         print("\nInvalid Path to folder, does not exits\n\n")
     else:
-        checkPE(argumetns[1])
+        checkPE(arguments[1])

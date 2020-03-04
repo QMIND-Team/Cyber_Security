@@ -70,7 +70,9 @@ def visualize_metadata(meta_df):
     # display through a histogram
     plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len_train, ben_len_train, unlab_len_train], label="Training Set")
     plt.bar(['Malicious', 'Benign', 'Unlabeled'], [mal_len_test, ben_len_test, unlab_len_test], label="Testing Set")
+    plt.xlabel("Classification of Files")
     plt.ylabel("Numbers of Files per Subset")
+    plt.title("EMBER Dataset Representation")
     plt.legend()
     plt.show()
 

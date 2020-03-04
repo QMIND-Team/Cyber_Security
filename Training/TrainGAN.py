@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from Models.Generator import init_generator
 from Models.Discriminator import init_discriminator
-from Models.Detector import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, chckpnt
+from Models.Losses import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, chckpnt
 from LoadingData.LoadData import load_dataset
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -132,7 +132,7 @@ def train(epochs, batch_size_floor, num_load_files, folder):
         disc_loss_list.append(disc_loss.numpy())
 
         # call the save checkpoint function every 15 epochs
-        if (epoch + 1) % 15 == 0:
+        if (epoch + 1) % 10 == 0:
             print("Checkpoint Reached - Saving Weights")
             chckpnt(discriminator, generator)
         print("Time for Epoch {} is {} seconds".format(epoch+1, time.time()-start))
