@@ -21,8 +21,7 @@ def generator_loss(malicious_examples):
     return cross_entropy(tf.ones_like(malicious_examples), malicious_examples)
 
 
-def chckpnt(Disc, Gen):
-    checkpoint_dir = 'C:/Users/willm/pycharmprojects/Cyber_Security/Training_Checkpoint/'
+def chckpnt(Disc, Gen, checkpoint_dir):
     checkpoint_prefix = os.path.join(checkpoint_dir, "checkpoint")
     checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                      discriminator_optimizer=discriminator_optimizer,
