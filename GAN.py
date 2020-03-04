@@ -1,7 +1,7 @@
 from Training.TrainGAN import train, display_training_predictions, plot_loss_functions
 
-EPOCHS = 40
-BATCH_SIZE_FLOOR = 750
+EPOCHS = 20
+BATCH_SIZE_FLOOR = 200
 
 
 # compile all the functionality of the GAN

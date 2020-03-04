@@ -9,10 +9,10 @@ discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0
 
 
 # calculate the loss of the discriminator model during training
-def discriminator_loss(benign_examples, malicious_examples):
+def discriminator_loss(benign_examples, adversarial_examples):
     benign_loss = cross_entropy(tf.ones_like(benign_examples), benign_examples)
-    malicious_loss = cross_entropy(tf.zeros_like(malicious_examples), malicious_examples)
-    disc_loss = benign_loss + malicious_loss
+    adversarial_loss = cross_entropy(tf.zeros_like(adversarial_examples), adversarial_examples)
+    disc_loss = benign_loss + adversarial_loss
     return disc_loss
 
 
