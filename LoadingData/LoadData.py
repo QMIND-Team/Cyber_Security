@@ -35,7 +35,7 @@ def load_dataset(dataset_dir, sample_size=100000, emberDS = True):
         test_train_files = 'X_train.dat' and 'y_train.dat' and 'X_test.dat' and 'y_test.dat'
         dataset_dir_files = os.listdir(dataset_dir)
         if test_train_files not in dataset_dir_files:
-            init_vectorized_features(dataset_dir_files)
+            init_vectorized_features(dataset_dir)
         # read the data from the .dat files and assign them to variables
         X_train, y_train, X_test, y_test = read_test_train(dataset_dir)
         #  ensure that the sample size input is a valid number within the dataset
