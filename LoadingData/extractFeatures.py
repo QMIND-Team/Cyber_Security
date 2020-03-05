@@ -53,7 +53,7 @@ def split_10k_files(filePath,newFilePath):
     """
     extractor = ember.PEFeatureExtractor()
     metadata = readMetadata(filePath+'\metadata.json')
-    for i in range(10000):
+    for i in range(6820):
         try:                                    #index error would mean out of files left, so it just breaks the function where it is
             file = os.listdir(filePath)[1]      #has to be index 1 because index 0 is the .json file
             if not path.isdir(newFilePath):     #make new directory/metadata file if not already there
@@ -73,14 +73,14 @@ def split_10k_files(filePath,newFilePath):
             print(i+1,"iterations done")
 
 if __name__ == "__main__":
-    dataPath = "D:\VirusShare_complete\Files9999"
-    newFilePath = "D:\\randomBenign"
+    dataPath = "D:\VirusShare_complete\\viruses_unsorted"
+    newFilePath = "D:\\VirusShare_complete\\10001Files"
 
     #outPutFile = "13476_files_features.dat" # only needed to use when extracting features from memmap
     # file name is created in part by num of files that went into it, and is needed to later
     # parse the file into the proper sizing from reading the memmap
 
-    #vectorizePEs(newFilePath)
+    vectorizePEs(newFilePath)
     #split_10k_files(dataPath,newFilePath)
     #memmap = readMemmap("C:\\Users\\willm\\PycharmProjects\\Cyber_Security\\data\\10000_files_features.dat")
     #print(memmap)

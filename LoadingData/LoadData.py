@@ -96,12 +96,18 @@ def load_dataset(dataset_dir, sample_size=100000, emberDS = True):
 
 
     else:
+        X_ben_train = []
+        X_mal_train = []
         for i in os.listdir(dataset_dir):
-            if "10000" in i:
-                X_mal_train = LoadingData.extractFeatures.readMemmap(dataset_dir+"\\"+i)
+            if "benign" in i:
+                ben_intermediate = LoadingData.extractFeatures.readMemmap(dataset_dir+"\\"+i)
+                for val in ben_intermediate:
+                    X_ben_train.append(val)
             else:
-                X_ben_train = LoadingData.extractFeatures.readMemmap(dataset_dir+"\\"+i)
-        
+                mal_intermediate = LoadingData.extractFeatures.readMemmap(dataset_dir+"\\"+i)
+                for val in mal_intermediate:
+                    X_mal_train.append(val)
+
         if sample_size < len(X_mal_train):
             X_mal_train = X_mal_train[0:sample_size]
         

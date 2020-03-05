@@ -30,7 +30,7 @@ if __name__ == '__main__':
     of it as part of the name. Please dont set num_load_files to larger than that...
     """
 
-    ember_Folder = "E:/QMIND/DataSet/ember"
+    ember_Folder = "D:\emberDataset"
     datasetFolder = "./data"
     checkpoint_dir = "./Training_Checkpoints/"
     GAN(datasetFolder, checkpoint_dir, False)
