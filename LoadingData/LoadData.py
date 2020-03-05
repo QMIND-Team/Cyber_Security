@@ -176,7 +176,23 @@ def single_benign_example(benign_df):
     example = benign_df['Vectorized Features'][randint(0, 300000)]
     return example
 
+def single_malicious_example_ourDS(folder):
+    mal = []
+    for file in os.listdir(folder):
+        if "benign" not in file:
+            intermediate = LoadingData.extractFeatures.readMemmap(folder+"\\"+file)
+            for i in intermediate:
+                mal.append(i)
+    return mal[randint(0,len(mal)-1)]
 
+def single_benign_example_ourDS(folder):
+    ben = []
+    for file in os.listdir(folder):
+        if "benign" in file:
+            intermediate = LoadingData.extractFeatures.readMemmap(folder+"\\"+file)
+            for i in intermediate:
+                ben.append(i)
+    return ben[randint(0,len(ben)-1)]
 """
 if __name__ == '__main__':
     df = load_dataset("D:\emberDataset")
