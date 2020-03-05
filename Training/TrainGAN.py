@@ -38,6 +38,7 @@ def train_step(malicious_examples, benign_examples, generator, discriminator):
     generator_gradient = gen_tape.gradient(gen_loss, generator.trainable_weights)
     discriminator_gradient = disc_tape.gradient(disc_loss, discriminator.trainable_weights)
 
+    disc_loss = disc_loss/2
     # apply the gradients created above to the respective optimizer
     generator_optimizer.apply_gradients(zip(generator_gradient, generator.trainable_weights))
     discriminator_optimizer.apply_gradients(zip(discriminator_gradient, discriminator.trainable_weights))
@@ -57,7 +58,7 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
     # load data from where ember is stored on the users computer
     if emberDS:
         xtrain_mal, ytrain_mal, xtest_mal, ytest_mal, xtrain_ben, ytrain_ben, xtest_ben, ytest_ben = load_dataset(
-                folder, num_load_files,emberDS)
+            folder, num_load_files, emberDS)
     
     else:
         xtrain_mal, xtrain_ben = load_dataset(folder, num_load_files, emberDS)
@@ -75,21 +76,33 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
     discriminator.summary()
     print(end="\n\n")
 
-    frozen_model = "discriminator"
+    generator_frozen = True
+    discriminator_frozen = False
+    dont_freeze = False
     epoch_count = 1
     for epoch in range(epochs):
-        if epoch_count % 1 == 0 and frozen_model == "discriminator":
-            for layers in discriminator.layers:
-                layers.trainable = True
-            for layers in generator.layers:
-                layers.trainable = False
-            frozen_model = "generator"
-        elif epoch_count % 1 == 0 and frozen_model == "generator":
-            for layers in generator.layers:
-                layers.trainable = True
-            for layers in discriminator.layers:
-                layers.trainable = False
-            frozen_model = "discriminator"
+        if not dont_freeze:
+            if epoch_count % 1 == 0 and discriminator_frozen and not generator_frozen:
+                for layers in discriminator.layers:
+                    layers.trainable = True
+                for layers in generator.layers:
+                    layers.trainable = False
+                generator_frozen = True
+                discriminator_frozen = False
+            if epoch_count % 1 == 0 and generator_frozen and not discriminator_frozen:
+                for layers in generator.layers:
+                    layers.trainable = True
+                for layers in discriminator.layers:
+                    layers.trainable = False
+                generator_frozen = False
+                discriminator_frozen = True
+            if epoch_count % 1 == 0 and not generator_frozen and not discriminator_frozen:
+                for layers in generator.layers:
+                    layers.trainable = True
+                for layers in discriminator.layers:
+                    layers.trainable = False
+                generator_frozen = False
+                discriminator_frozen = True
 
         start = time.time()
         print("Epoch {}/{}".format(epoch_count, epochs))
@@ -134,6 +147,18 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
 
         gen_loss_list.append(gen_loss.numpy())
         disc_loss_list.append(disc_loss.numpy())
+
+        if epoch_count > 3:
+            if gen_loss_list[epoch_count-1] == gen_loss_list[epoch_count-2] == gen_loss_list[epoch_count-3]:
+                for layers in generator.layers:
+                    layers.trainable = True
+                generator_frozen = False
+                dont_freeze = True
+            if disc_loss_list[epoch_count-1] == disc_loss_list[epoch_count-2] == disc_loss_list[epoch_count-3]:
+                for layers in discriminator.layers:
+                    layers.trainable = True
+                discriminator_frozen = False
+                dont_freeze = True
 
         # call the save checkpoint function every 15 epochs
         if (epoch + 1) % 10 == 0:

@@ -177,7 +177,7 @@ def single_benign_example(benign_df):
     return example
 
 
-
+"""
 if __name__ == '__main__':
     df = load_dataset("D:\emberDataset")
     malicious = malicious_examples(df)
@@ -193,5 +193,5 @@ if __name__ == '__main__':
     print("xtest_mal type: {}".format(type(xtest_mal)))
     print("xtest_mal shape: {}\n".format(xtest_mal.shape))
     print("Done")
-
+"""
 
