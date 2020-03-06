@@ -4,8 +4,9 @@ import pandas as pd
 import time
 import os
 import matplotlib.pyplot as plt
+from random import randint
 
-from Models.Generator import init_generator
+from Models.Generator import init_generator, generate_example
 from Models.Discriminator import init_discriminator
 from Models.Losses import generator_loss, generator_optimizer, discriminator_loss, discriminator_optimizer, chckpnt
 from LoadingData.LoadData import load_dataset
@@ -20,10 +21,10 @@ benign_predictions = 0
 def train_step(malicious_examples, benign_examples, generator, discriminator):
     # generate a randomly distributed tensor for noise
     noise = tf.random.uniform([1, 2381])
-
     # call both of the models with their respective inputs and call their respective loss functions
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
         # call the generator with malicious examples and the noise created above
+        #print("MALICIOUS EXAMPLES:\t\t",malicious_examples,"\n\n")
         adversarial_example = generator([malicious_examples, noise])
 
         # call the discriminator on both the adversarial example
@@ -109,6 +110,7 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
         # loop for the number of training steps based on the batch size of the tensor and the batch_size_floor parameter
         train_step_count = 1
         for training_step in range(xtrain_mal.shape[0] // batch_size_floor):
+
             print("Training Step {}/{}".format(train_step_count, xtrain_mal.shape[0] // batch_size_floor))
 
             # generate a random number to access vectorized features from the malicious tensor at random
@@ -120,8 +122,8 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
             ben_index = np.random.randint(0, xtrain_ben.shape[0])
             ben_batch = xtrain_ben[ben_index]
             benign_batch = tf.expand_dims(ben_batch, 0)
-
             # call train step to deal with outputs gradients, and loss functions
+            
             adversarial, gen_label, real_label, gen_loss, disc_loss = train_step(malicious_batch, benign_batch,
                                                                                  generator, discriminator)
             train_step_count += 1
@@ -173,6 +175,36 @@ def train(epochs, batch_size_floor, num_load_files, folder, checkpoint_dir, embe
     print(adversarial_df.head())
     return generator, discriminator, (benign_predictions, malicious_predictions), (gen_loss_list, disc_loss_list)
 
+def createPredictions(generator, discriminator, examples, num, malicious = True):
+    mal = 0
+    ben = 0
+    print(examples)
+    if malicious:
+        for i in range(num):
+            mal_index = np.random.randint(0, examples.shape[0])
+            mal_batch = examples[mal_index]
+            malicious_batch = tf.expand_dims(mal_batch, 0)
+
+            noise = tf.random.uniform([1, 2381])
+            
+            adversarial_ex = generate_example(malicious_batch,noise,generator)
+            pred = generator.predict_on_batch([adversarial_ex])
+            print(pred)
+            if pred < .5:
+                mal +=1
+            else:
+                ben +=1
+    else:
+        for i in range(num):
+            ben_index = np.random.randint(0, examples.shape[0])
+            ben_batch = examples[ben_index]
+            benign_batch = tf.expand_dims(ben_batch, 0)
+            pred = generator.predict_on_batch([benign_batch])
+            if pred < .5:
+                mal +=1
+            else:
+                ben +=1
+    return mal,ben
 
 def display_training_predictions(ben_predictions, mal_predictions):
     labels = 'Benign', 'Malicious'

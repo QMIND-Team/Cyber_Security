@@ -117,7 +117,7 @@ def load_dataset(dataset_dir, sample_size=100000, emberDS = True):
         X_mal_train = tf.convert_to_tensor(X_mal_train)
         X_ben_train = tf.convert_to_tensor(X_ben_train)
 
-        return X_mal_train,X_ben_train
+        return X_mal_train, X_ben_train
 
 # Load the .dat data into a pd.DataFrame
 def load_to_dataframe(dataset_dir):
